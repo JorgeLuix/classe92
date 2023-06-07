@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vite App</title>
+  </head>
+  <body>
+    To display the video in fullscreen mode before the `App.vue` component starts, you can add some CSS styles to the `video` element, and use JavaScript to toggle the display properties of the video element and the `App.vue` component. Here's an example of how to do that:
+
+```
+<template>
+  <div>
+    <video ref="video" width="100%" height="100%" autoplay>
+      <source src="/src/assets/video/boolflix.mp4" type="video/mp4">
+    </video>
+    <div ref="app" class="app" style="display: none;">
+      <HeaderComponent @search="searchMovies"/>
+      <MoviesComponent :movies="movies"/>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from 'axios'
+import HeaderComponent from './components/HeaderComponent.vue';
+import MoviesComponent from './components/MoviesComponent.vue';
+
+export default {
+  name: 'App',
+  components: { HeaderComponent, MoviesComponent },
+  data() {
+    return {
+      movies: [],
+    }
+  },
+  mounted() {
+    const video = this.$refs.video;
+    const app = this.$refs.app;
+    video.addEventListener('ended', () => {
+      video.style.display = 'none';
+      app.style.display = 'block';
+      app.classList.add('fadeIn'); // optional animation class
+    });
+  },
+  methods: {
+    searchMovies(query) {
+      axios.get('https://api.themoviedb.org/3/search/movie', {
+        params: {
+          api_key: 'ae758d764b49bd80a077b2774e344530',
+          language: 'en-US',
+          query: query
+        }
+      }).then(response => {
+        this.movies = response.data.results;
+      }).catch(error => {
+        console.log(error);
+      });
+
+      axios.get('https://api.themoviedb.org/3/search/tv', { // chiamata per showTv
+        params: {
+          api_key: 'ae758d764b49bd80a077b2774e344530',
+          language: 'en-US',
+          query: query
+        }
+      }).then(response => {
+        this.movies = this.movies.concat(response.data.results);
+      }).catch(error => {
+        console.log(error);
+      });
+    },
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index:
+
+
+```
+  </body>
+</html>

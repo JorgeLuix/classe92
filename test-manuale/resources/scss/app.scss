@@ -1,0 +1,10 @@
+@use './partials/variables' as *;
+
+/*resources/scss/app.scss*/
+@import "~bootstrap/scss/bootstrap";
+body {
+background-color: red;
+h1{
+    color: rgb(11, 13, 135);
+}
+}
